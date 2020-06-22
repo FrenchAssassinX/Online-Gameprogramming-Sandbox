@@ -5,11 +5,11 @@ local socket = require "socket"
 local udp = socket.udp()
 
 -- Disable the timeout for waiting forever
-udp::settimeout(0)
+udp:settimeout(0)
 
 -- Linking socket to an adress and port of our choice
 -- Using "*" can linking all local IP adresses
-udp:setsocketname('*', 55555)
+udp:setsockname('*', 55555)
 
 -- Var local to main.lua
 local data, ip, port -- To read received datas

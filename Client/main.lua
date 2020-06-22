@@ -2,7 +2,8 @@ io.stdout:setvbuf('no')
 
 --Socket and its properties
 local socket = require "socket"
-local address, port = "localhost", 55555
+local address = "localhost"
+local port = 55555
 
 local uuid
 
@@ -31,7 +32,7 @@ end
 function love.load()
     udp = socket.udp()
     udp:settimeout(0)
-    udp::setpername(address, port)
+    udp:setpeername(address, port)
 
     math.randomseed(os.time())
     uuid = GenUuid()
@@ -45,7 +46,7 @@ function love.update(dt)
 
     if updateTimer > updateRate then
         local dg = "Hello I am "..uuid
-        udp:sent(dg)
+        udp:send(dg)
         updateTimer = updateTimer - updateRate
     end
 
