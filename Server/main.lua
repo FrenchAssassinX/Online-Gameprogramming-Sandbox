@@ -21,6 +21,20 @@ print "| FrenchAssassinX server started |"
 print "=================================="
 
 
+local clientsList = {}
+
+function newClient(pUUID, pIP, pPort)
+    local myClient = {}
+
+    myClient.uuid = pUUID
+    myClient.ip = pIP
+    myClient.port = pPort
+
+    table.insert(clientsList, myClient)
+    print("New Client "..pUUID)
+    print("Their is|are "..#clientsList.." client|s connected !")
+end
+
 -- Infinite loop
 while running do
 
@@ -34,8 +48,22 @@ while running do
             socket.gettime(), data, ip, port
         ))
 
+        local separatorPos = string.find(data, ":")
+        local keyword = string.sub(data, 1, separatorPos - 1) -- Using (separatorPos - 1) for avoid to get ":" in the keyword variable
+        print("Keyword : "..keyword)
+
+        local value = string.sub(data, separatorPos + 1) -- Getting all informations of the client after ":"
+
+        if string.upper(keyword) == "CONNECT" then
+            newClient(value, ip, port)
+        elseif string.upper(keyword) == "MESSAGE" then
+            for client=1, #clientsList do
+                udp:sendto(data, clientsList[client].ip, clientsList[client].port)
+            end
+        end
+
         -- ...then we respond on the IP and the Port of the client
-        udp:sento("How are you ", ip, port)
+        udp:sendto("How are you ", ip, port)
     end
 
     -- Waiting a few seconds to avoid processor saturation
