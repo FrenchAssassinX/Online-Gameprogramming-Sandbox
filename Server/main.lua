@@ -21,11 +21,21 @@ print "| FrenchAssassinX server started |"
 print "=================================="
 
 
+local map = '{"keyword":"map","map":["{1,1,1,1,1,1,1,1,1,1,1,1,1}","{1,1,1,1,1,1,1,1,1,1,1,1,1}","{1,1,1,1,1,1,1,1,1,1,1,1,1}","{1,1,1,1,1,1,1,1,1,1,1,1,1}","{1,1,1,1,1,1,1,1,1,1,1,1,1}","{1,1,1,1,1,1,1,1,1,1,1,1,1}","{1,1,1,1,1,1,1,1,1,1,1,1,1}","{0,0,0,0,0,0,0,0,0,0,0,0,0}","{0,0,0,0,0,0,0,0,0,0,0,0,0}"]}'
+
 local clientsList = {}
 local bUpdateNeeded = false
 
 
 --------------------------------------------- Specific functions -------------------------------------------
+function LoadMap(pMap, pClient)
+    local mapDatagram = ""
+    mapDatagram = string.format(pMap)
+    print("Send "..mapDatagram)
+
+    udp:sendto(mapDatagram, pClient.ip, pClient.port)  -- Send map to client
+end
+
 function NewClient(pUUID, pIP, pPort)
     local myClient = {}
 
@@ -37,6 +47,8 @@ function NewClient(pUUID, pIP, pPort)
     myClient.sprite = "fish_1"
 
     table.insert(clientsList, myClient)
+
+    LoadMap(map, myClient)
     print("New Client "..pUUID)
     print("There is|are "..#clientsList.." client|s connected !")
 end

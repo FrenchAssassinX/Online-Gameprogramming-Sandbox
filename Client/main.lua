@@ -22,6 +22,9 @@ local sprite = "fish_1"
 
 local clientsList = {}
 
+local map = ""
+local bLoadMap = false
+
 
 print "===================================="
 print "| FrenchAssassinX client started ! |"
@@ -34,7 +37,6 @@ function NewClient(pUUID, pSprite, pX, pY)
 
     myClient.uuid = pUUID
     myClient.sprite = love.graphics.newImage("pics/"..pSprite..".png")
-    --myClient.sprite = pSprite
     myClient.x = pX
     myClient.y = pY
 
@@ -118,6 +120,13 @@ function love.update(dt)
             end
         end
 
+        if string.upper(datagram.keyword) == "MAP" then
+            map = json.decode(data)
+            print(string.format("Map: %s", map))
+
+            bLoadMap = true
+            end
+
     elseif msg ~= "timeout" then
         error("Network error: "..tostring(msg))
     end
@@ -142,6 +151,11 @@ end
 
 function love.draw()
     love.graphics.print("Client "..uuid.." | Nb clients: "..#clientsList)
+
+    if bLoadMap then
+
+        bLoadMap = false
+    end
 
     for client=1, #clientsList do
         c = clientsList[client]
