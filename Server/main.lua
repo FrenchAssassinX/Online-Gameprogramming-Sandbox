@@ -24,20 +24,6 @@ print "=================================="
 local clientsList = {}
 local bUpdateNeeded = false
 
-function NewClient(pUUID, pIP, pPort)
-    local myClient = {}
-
-    myClient.uuid = pUUID
-    myClient.ip = pIP
-    myClient.port = pPort
-    myClient.x = 0
-    myClient.y = 0
-    myClient.sprite = "X"
-
-    table.insert(clientsList, myClient)
-    print("New Client "..pUUID)
-    print("There is|are "..#clientsList.." client|s connected !")
-end
 
 -- Infinite loop
 while running do
@@ -123,4 +109,19 @@ while running do
     -- Waiting a few seconds to avoid processor saturation
     socket.sleep(0.01)
 
+end
+
+function NewClient(pUUID, pIP, pPort)
+    local myClient = {}
+
+    myClient.uuid = pUUID
+    myClient.ip = pIP
+    myClient.port = pPort
+    myClient.x = 0
+    myClient.y = 0
+    myClient.sprite = "X"
+
+    table.insert(clientsList, myClient)
+    print("New Client "..pUUID)
+    print("There is|are "..#clientsList.." client|s connected !")
 end

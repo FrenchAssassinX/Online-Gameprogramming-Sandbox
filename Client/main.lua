@@ -22,33 +22,11 @@ local sprite = "X"
 
 local clientsList = {}
 
-function NewClient(pUUID, pSprite, pX, pY)
-    local myClient = {}
-
-    myClient.uuid = pUUID
-    myClient.sprite = pSprite
-    myClient.x = pX
-    myClient.y = pY
-
-    table.insert(clientsList, myClient)
-    print("New Client "..myClient.uuid)
-    print("There is|are "..#clientsList.." client|s connected !")
-end
-
 
 print "===================================="
 print "| FrenchAssassinX client started ! |"
 print "===================================="
 
-
--- Function to generate an unique client ID
-local function GenUuid()
-    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-    return string.gsub(template, '[xy]', function (c)
-        local v = (c == 'x') and love.math.random(0, 0xf) or love.math.random(8, 0xb)
-        return string.format('%x', v)
-    end)
-end
 
 function love.load()
     udp = socket.udp()
@@ -59,11 +37,6 @@ function love.load()
     uuid = GenUuid()
 
     updateTimer = 0
-end
-
-function SendKeyword(pKeyword, pData)
-    local datagram = pKeyword..":"..uuid..":"..pData
-    udp:send(datagram)
 end
 
 function love.update(dt)
@@ -185,4 +158,32 @@ function love.keypressed(pKey)
         SendKeyword("Sprite", "J")
         sprite = "J"
     end
+end
+
+
+function NewClient(pUUID, pSprite, pX, pY)
+    local myClient = {}
+
+    myClient.uuid = pUUID
+    myClient.sprite = pSprite
+    myClient.x = pX
+    myClient.y = pY
+
+    table.insert(clientsList, myClient)
+    print("New Client "..myClient.uuid)
+    print("There is|are "..#clientsList.." client|s connected !")
+end
+
+-- Function to generate an unique client ID
+local function GenUuid()
+    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    return string.gsub(template, '[xy]', function (c)
+        local v = (c == 'x') and love.math.random(0, 0xf) or love.math.random(8, 0xb)
+        return string.format('%x', v)
+    end)
+end
+
+function SendKeyword(pKeyword, pData)
+    local datagram = pKeyword..":"..uuid..":"..pData
+    udp:send(datagram)
 end
