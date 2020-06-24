@@ -18,7 +18,7 @@ local bChanged = true
 local lastMessage = ""
 
 local X,Y = love.math.random(1, 800), love.math.random(1, 600)
-local sprite = "X"
+local sprite = "fish_1"
 
 local clientsList = {}
 
@@ -28,6 +28,38 @@ print "| FrenchAssassinX client started ! |"
 print "===================================="
 
 
+--------------------------------------------- Specifice functions ------------------------------------------
+function NewClient(pUUID, pSprite, pX, pY)
+    local myClient = {}
+
+    myClient.uuid = pUUID
+    myClient.sprite = love.graphics.newImage("pics/"..pSprite..".png")
+    --myClient.sprite = pSprite
+    myClient.x = pX
+    myClient.y = pY
+
+    table.insert(clientsList, myClient)
+    print("New Client "..myClient.uuid)
+    print("There is|are "..#clientsList.." client|s connected !")
+end
+
+-- Function to generate an unique client ID
+local function GenUuid()
+    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    return string.gsub(template, '[xy]', function (c)
+        local v = (c == 'x') and love.math.random(0, 0xf) or love.math.random(8, 0xb)
+        return string.format('%x', v)
+    end)
+end
+
+function SendKeyword(pKeyword, pData)
+    local datagram = pKeyword..":"..uuid..":"..pData
+    udp:send(datagram)
+end
+--------------------------------------------- End Specific functions ------------------------------------------
+
+
+-------------------------------------------------- Love 2D ----------------------------------------------------
 function love.load()
     udp = socket.udp()
     udp:settimeout(0)
@@ -74,7 +106,7 @@ function love.update(dt)
                 if c.uuid == datagram.uuid then
                     bExist = true
 
-                    c.sprite = datagram.sprite
+                    c.sprite = love.graphics.newImage("pics/"..datagram.sprite..".png")
                     c.x = datagram.x
                     c.y = datagram.y
                 end
@@ -113,77 +145,50 @@ function love.draw()
 
     for client=1, #clientsList do
         c = clientsList[client]
-        love.graphics.print(c.sprite, c.x, c.y)
+        love.graphics.draw(c.sprite, c.x, c.y)
     end
 end
 
 function love.keypressed(pKey)
     if pKey == "0" then
-        SendKeyword("Sprite", "A")
-        sprite = "A"
+        SendKeyword("Sprite", "fish_1")
+        sprite = "fish_1"
     end
     if pKey == "1" then
-        SendKeyword("Sprite", "B")
-        sprite = "B"
+        SendKeyword("Sprite", "fish_2")
+        sprite = "fish_2"
     end
     if pKey == "2" then
-        SendKeyword("Sprite", "C")
-        sprite = "C"
+        SendKeyword("Sprite", "fish_3")
+        sprite = "fish_3"
     end
     if pKey == "3" then
-        SendKeyword("Sprite", "D")
-        sprite = "D"
+        SendKeyword("Sprite", "fish_4")
+        sprite = "fish_4"
     end
     if pKey == "4" then
-        SendKeyword("Sprite", "E")
-        sprite = "E"
+        SendKeyword("Sprite", "fish_5")
+        sprite = "fish_5"
     end
     if pKey == "5" then
-        SendKeyword("Sprite", "F")
-        sprite = "F"
+        SendKeyword("Sprite", "fish_6")
+        sprite = "fish_6"
     end
     if pKey == "6" then
-        SendKeyword("Sprite", "G")
-        sprite = "G"
+        SendKeyword("Sprite", "fish_7")
+        sprite = "fish_7"
     end
     if pKey == "7" then
-        SendKeyword("Sprite", "H")
-        sprite = "H"
+        SendKeyword("Sprite", "fish_8")
+        sprite = "fish_8"
     end
     if pKey == "8" then
-        SendKeyword("Sprite", "I")
-        sprite = "I"
+        SendKeyword("Sprite", "fish_9")
+        sprite = "fish_9"
     end
     if pKey == "9" then
-        SendKeyword("Sprite", "J")
-        sprite = "J"
+        SendKeyword("Sprite", "fish_10")
+        sprite = "fish_10"
     end
 end
-
-
-function NewClient(pUUID, pSprite, pX, pY)
-    local myClient = {}
-
-    myClient.uuid = pUUID
-    myClient.sprite = pSprite
-    myClient.x = pX
-    myClient.y = pY
-
-    table.insert(clientsList, myClient)
-    print("New Client "..myClient.uuid)
-    print("There is|are "..#clientsList.." client|s connected !")
-end
-
--- Function to generate an unique client ID
-local function GenUuid()
-    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-    return string.gsub(template, '[xy]', function (c)
-        local v = (c == 'x') and love.math.random(0, 0xf) or love.math.random(8, 0xb)
-        return string.format('%x', v)
-    end)
-end
-
-function SendKeyword(pKeyword, pData)
-    local datagram = pKeyword..":"..uuid..":"..pData
-    udp:send(datagram)
-end
+------------------------------------------------ End Love 2D ---------------------------------------------------
